@@ -1,2 +1,2 @@
 # GroundControlSystem
-A Ground Control System Using Kivy Framework
+A Ground Control System For Quadcopter Using Kivy Framework
