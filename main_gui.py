@@ -19,7 +19,6 @@ class GroundStationGUI(App):
         Window.bind(on_resize=self.video_stream_widget.update_video_border)
         Window.bind(on_show=self.video_stream_widget.update_video_border)
 
-        # Clock.schedule_interval(self.print_window_size, 0.2)
         self.main_window = MainBackground()
         self.main_window.add_widget(self.video_stream_widget)
         self.main_window.add_widget(Label(text="Deneme"))
