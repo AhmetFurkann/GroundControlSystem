@@ -5,32 +5,47 @@ from kivymd.uix.label import MDLabel
 
 
 class CustomWidget(FloatLayout):
-    back_circle_color = ListProperty([1, 1, 1, 0.5])
-    back_circle_size = NumericProperty(200)
+    # back_circle_color = ListProperty([1, 1, 1, 0.5])
+    # back_circle_size = NumericProperty(200)
 
-    front_circle_color = ListProperty([0, 1, 0.4, 0.5])
+    back_circle_color = ListProperty([1, 0, 0.1, 0.6])
+    back_circle_start_angle = NumericProperty(0)
+    back_circle_finish_angle = NumericProperty(180)
+    back_circle_width = NumericProperty(0)
 
+    front_circle_color = ListProperty([0, 1, 0.1, 0.6])
     front_circle_start_angle = NumericProperty(0)
     front_circle_finish_angle = NumericProperty(180)
-
     front_circle_width = NumericProperty(0)
 
     background_col = ListProperty([0, .6, .7, .5])
 
     def __init__(self):
         super(CustomWidget, self).__init__()
-        self.front_circle_center_x = self.center_x
-        self.front_circle_center_y = self.center_y
 
-        self.front_circle_radius = max(self.size) / 2
+        """Attributes of the circle"""
+        self.circle_width = 8
+        self.circle_radius = min(self.size) - (self.circle_width * 2)
+        self.circle_center_x = self.center_x - (self.circle_radius / 2)
+        self.circle_center_y = self.center_y - (self.circle_radius / 2)
+
+        self.back_circle_col = Color(rgba=self.back_circle_color)
+        self.back_circle_line = Line(ellipsis=(self.circle_center_x,
+                                               self.circle_center_y,
+                                               self.circle_radius,
+                                               self.circle_radius
+                                               ))
+        self.back_circle_line.width = self.circle_width
 
         self.front_circle_col = Color(rgba=self.front_circle_color)
-        self.front_circle_line = Line(circle=(self.front_circle_center_x,
-                                              self.front_circle_center_y,
-                                              self.front_circle_radius),
-                                      width=8)
+        self.front_circle_line = Line(ellipsis=(self.circle_center_x,
+                                                self.circle_center_y,
+                                                self.circle_radius,
+                                                self.circle_radius))
+        self.front_circle_line.width = self.circle_width
 
-        self.background_rectangle = Rectangle(pos=(0, 0), size=(self.size[0], self.size[1]))
+        self.canvas.add(self.back_circle_col)
+        self.canvas.add(self.back_circle_line)
 
         self.canvas.add(self.front_circle_col)
         self.canvas.add(self.front_circle_line)
@@ -47,15 +62,19 @@ class CustomWidget(FloatLayout):
         self.add_widget(self.numeric_indicator_label)
 
     def update_the_circle(self, *args):
-        self.update_the_rectangle()
+        self.update_the_label()
+        self.back_circle_col = self.back_circle_color
         self.front_circle_col = self.front_circle_color
-        self.front_circle_line.circle = (self.center_x,
-                                         self.center_y,
-                                         min(self.size) / 2 - self.front_circle_line.width)
-        self.front_circle_line.width = 8
+        self.circle_radius = min(self.size) - (self.circle_width * 2)
+        self.circle_center_x = self.center_x - (self.circle_radius / 2)
+        self.circle_center_y = self.center_y - (self.circle_radius / 2)
 
-    def update_the_rectangle(self):
-        self.background_rectangle.size = self.size
-        self.background_rectangle.pos = self.pos
+        self.back_circle_line.ellipse = (self.circle_center_x,
+                                         self.circle_center_y,
+                                         self.circle_radius,
+                                         self.circle_radius)
+        self.back_circle_line.width = self.circle_width
+
+    def update_the_label(self):
         self.numeric_indicator_label.color = [0.8, 0.8, 0.8, 1]
         self.numeric_indicator_label.pos_hint = {"center_x": .5, "center_y": .5}
