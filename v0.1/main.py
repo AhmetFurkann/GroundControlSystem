@@ -13,7 +13,6 @@ from kivymd.app import MDApp
 from custom_widget_1 import CustomWidget
 from PIL import Image as PILImage
 import numpy as np
-from operations import image_resize
 import cv2
 
 Config.set('graphics', 'width', '1252')
@@ -31,7 +30,10 @@ class CamStreamLayout(Image):
         frame = PILImage.open("image.png")
         frame = np.array(frame)
         frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        frame = image_resize(frame, width=int(self.size[0]), height=int(self.size[1]))
+        width = int(self.size[0])
+        height = int(self.size[1])
+        dim = (width, height)
+        frame = cv2.resize(frame, dim, interpolation=cv2.INTER_AREA)
 
         buffer = cv2.flip(frame, 0)
         buffer = buffer.tostring()
